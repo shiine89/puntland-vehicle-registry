@@ -9,38 +9,232 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SearchRouteImport } from './routes/search'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as AdminUsersRouteImport } from './routes/admin.users'
+import { Route as AdminTransfersRouteImport } from './routes/admin.transfers'
+import { Route as AdminReportsRouteImport } from './routes/admin.reports'
+import { Route as AdminOwnersRouteImport } from './routes/admin.owners'
+import { Route as AdminIncidentsRouteImport } from './routes/admin.incidents'
+import { Route as AdminAuditRouteImport } from './routes/admin.audit'
+import { Route as AdminVehiclesIndexRouteImport } from './routes/admin.vehicles.index'
+import { Route as AdminVehiclesNewRouteImport } from './routes/admin.vehicles.new'
+import { Route as AdminVehiclesIdIndexRouteImport } from './routes/admin.vehicles.$id.index'
+import { Route as AdminVehiclesIdTransferRouteImport } from './routes/admin.vehicles.$id.transfer'
 
+const SearchRoute = SearchRouteImport.update({
+  id: '/search',
+  path: '/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminUsersRoute = AdminUsersRouteImport.update({
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminTransfersRoute = AdminTransfersRouteImport.update({
+  id: '/transfers',
+  path: '/transfers',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminReportsRoute = AdminReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminOwnersRoute = AdminOwnersRouteImport.update({
+  id: '/owners',
+  path: '/owners',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminIncidentsRoute = AdminIncidentsRouteImport.update({
+  id: '/incidents',
+  path: '/incidents',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAuditRoute = AdminAuditRouteImport.update({
+  id: '/audit',
+  path: '/audit',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminVehiclesIndexRoute = AdminVehiclesIndexRouteImport.update({
+  id: '/vehicles/',
+  path: '/vehicles/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminVehiclesNewRoute = AdminVehiclesNewRouteImport.update({
+  id: '/vehicles/new',
+  path: '/vehicles/new',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminVehiclesIdIndexRoute = AdminVehiclesIdIndexRouteImport.update({
+  id: '/vehicles/$id/',
+  path: '/vehicles/$id/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminVehiclesIdTransferRoute = AdminVehiclesIdTransferRouteImport.update({
+  id: '/vehicles/$id/transfer',
+  path: '/vehicles/$id/transfer',
+  getParentRoute: () => AdminRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/auth': typeof AuthRoute
+  '/search': typeof SearchRoute
+  '/admin/audit': typeof AdminAuditRoute
+  '/admin/incidents': typeof AdminIncidentsRoute
+  '/admin/owners': typeof AdminOwnersRoute
+  '/admin/reports': typeof AdminReportsRoute
+  '/admin/transfers': typeof AdminTransfersRoute
+  '/admin/users': typeof AdminUsersRoute
+  '/admin/': typeof AdminIndexRoute
+  '/admin/vehicles/new': typeof AdminVehiclesNewRoute
+  '/admin/vehicles/': typeof AdminVehiclesIndexRoute
+  '/admin/vehicles/$id/transfer': typeof AdminVehiclesIdTransferRoute
+  '/admin/vehicles/$id/': typeof AdminVehiclesIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/search': typeof SearchRoute
+  '/admin/audit': typeof AdminAuditRoute
+  '/admin/incidents': typeof AdminIncidentsRoute
+  '/admin/owners': typeof AdminOwnersRoute
+  '/admin/reports': typeof AdminReportsRoute
+  '/admin/transfers': typeof AdminTransfersRoute
+  '/admin/users': typeof AdminUsersRoute
+  '/admin': typeof AdminIndexRoute
+  '/admin/vehicles/new': typeof AdminVehiclesNewRoute
+  '/admin/vehicles': typeof AdminVehiclesIndexRoute
+  '/admin/vehicles/$id/transfer': typeof AdminVehiclesIdTransferRoute
+  '/admin/vehicles/$id': typeof AdminVehiclesIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/auth': typeof AuthRoute
+  '/search': typeof SearchRoute
+  '/admin/audit': typeof AdminAuditRoute
+  '/admin/incidents': typeof AdminIncidentsRoute
+  '/admin/owners': typeof AdminOwnersRoute
+  '/admin/reports': typeof AdminReportsRoute
+  '/admin/transfers': typeof AdminTransfersRoute
+  '/admin/users': typeof AdminUsersRoute
+  '/admin/': typeof AdminIndexRoute
+  '/admin/vehicles/new': typeof AdminVehiclesNewRoute
+  '/admin/vehicles/': typeof AdminVehiclesIndexRoute
+  '/admin/vehicles/$id/transfer': typeof AdminVehiclesIdTransferRoute
+  '/admin/vehicles/$id/': typeof AdminVehiclesIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/admin'
+    | '/auth'
+    | '/search'
+    | '/admin/audit'
+    | '/admin/incidents'
+    | '/admin/owners'
+    | '/admin/reports'
+    | '/admin/transfers'
+    | '/admin/users'
+    | '/admin/'
+    | '/admin/vehicles/new'
+    | '/admin/vehicles/'
+    | '/admin/vehicles/$id/transfer'
+    | '/admin/vehicles/$id/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/auth'
+    | '/search'
+    | '/admin/audit'
+    | '/admin/incidents'
+    | '/admin/owners'
+    | '/admin/reports'
+    | '/admin/transfers'
+    | '/admin/users'
+    | '/admin'
+    | '/admin/vehicles/new'
+    | '/admin/vehicles'
+    | '/admin/vehicles/$id/transfer'
+    | '/admin/vehicles/$id'
+  id:
+    | '__root__'
+    | '/'
+    | '/admin'
+    | '/auth'
+    | '/search'
+    | '/admin/audit'
+    | '/admin/incidents'
+    | '/admin/owners'
+    | '/admin/reports'
+    | '/admin/transfers'
+    | '/admin/users'
+    | '/admin/'
+    | '/admin/vehicles/new'
+    | '/admin/vehicles/'
+    | '/admin/vehicles/$id/transfer'
+    | '/admin/vehicles/$id/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRouteWithChildren
+  AuthRoute: typeof AuthRoute
+  SearchRoute: typeof SearchRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/search': {
+      id: '/search'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof SearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,11 +242,121 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/users': {
+      id: '/admin/users'
+      path: '/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AdminUsersRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/transfers': {
+      id: '/admin/transfers'
+      path: '/transfers'
+      fullPath: '/admin/transfers'
+      preLoaderRoute: typeof AdminTransfersRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/reports': {
+      id: '/admin/reports'
+      path: '/reports'
+      fullPath: '/admin/reports'
+      preLoaderRoute: typeof AdminReportsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/owners': {
+      id: '/admin/owners'
+      path: '/owners'
+      fullPath: '/admin/owners'
+      preLoaderRoute: typeof AdminOwnersRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/incidents': {
+      id: '/admin/incidents'
+      path: '/incidents'
+      fullPath: '/admin/incidents'
+      preLoaderRoute: typeof AdminIncidentsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/audit': {
+      id: '/admin/audit'
+      path: '/audit'
+      fullPath: '/admin/audit'
+      preLoaderRoute: typeof AdminAuditRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/vehicles/': {
+      id: '/admin/vehicles/'
+      path: '/vehicles'
+      fullPath: '/admin/vehicles/'
+      preLoaderRoute: typeof AdminVehiclesIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/vehicles/new': {
+      id: '/admin/vehicles/new'
+      path: '/vehicles/new'
+      fullPath: '/admin/vehicles/new'
+      preLoaderRoute: typeof AdminVehiclesNewRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/vehicles/$id/': {
+      id: '/admin/vehicles/$id/'
+      path: '/vehicles/$id'
+      fullPath: '/admin/vehicles/$id/'
+      preLoaderRoute: typeof AdminVehiclesIdIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/vehicles/$id/transfer': {
+      id: '/admin/vehicles/$id/transfer'
+      path: '/vehicles/$id/transfer'
+      fullPath: '/admin/vehicles/$id/transfer'
+      preLoaderRoute: typeof AdminVehiclesIdTransferRouteImport
+      parentRoute: typeof AdminRoute
+    }
   }
 }
 
+interface AdminRouteChildren {
+  AdminAuditRoute: typeof AdminAuditRoute
+  AdminIncidentsRoute: typeof AdminIncidentsRoute
+  AdminOwnersRoute: typeof AdminOwnersRoute
+  AdminReportsRoute: typeof AdminReportsRoute
+  AdminTransfersRoute: typeof AdminTransfersRoute
+  AdminUsersRoute: typeof AdminUsersRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+  AdminVehiclesNewRoute: typeof AdminVehiclesNewRoute
+  AdminVehiclesIndexRoute: typeof AdminVehiclesIndexRoute
+  AdminVehiclesIdTransferRoute: typeof AdminVehiclesIdTransferRoute
+  AdminVehiclesIdIndexRoute: typeof AdminVehiclesIdIndexRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminAuditRoute: AdminAuditRoute,
+  AdminIncidentsRoute: AdminIncidentsRoute,
+  AdminOwnersRoute: AdminOwnersRoute,
+  AdminReportsRoute: AdminReportsRoute,
+  AdminTransfersRoute: AdminTransfersRoute,
+  AdminUsersRoute: AdminUsersRoute,
+  AdminIndexRoute: AdminIndexRoute,
+  AdminVehiclesNewRoute: AdminVehiclesNewRoute,
+  AdminVehiclesIndexRoute: AdminVehiclesIndexRoute,
+  AdminVehiclesIdTransferRoute: AdminVehiclesIdTransferRoute,
+  AdminVehiclesIdIndexRoute: AdminVehiclesIdIndexRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRouteWithChildren,
+  AuthRoute: AuthRoute,
+  SearchRoute: SearchRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
