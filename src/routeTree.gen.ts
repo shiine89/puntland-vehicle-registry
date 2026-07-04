@@ -14,6 +14,12 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as AdminUsersRouteImport } from './routes/admin.users'
+import { Route as AdminTransfersRouteImport } from './routes/admin.transfers'
+import { Route as AdminReportsRouteImport } from './routes/admin.reports'
+import { Route as AdminOwnersRouteImport } from './routes/admin.owners'
+import { Route as AdminIncidentsRouteImport } from './routes/admin.incidents'
+import { Route as AdminAuditRouteImport } from './routes/admin.audit'
 import { Route as AdminVehiclesIndexRouteImport } from './routes/admin.vehicles.index'
 import { Route as AdminVehiclesNewRouteImport } from './routes/admin.vehicles.new'
 import { Route as AdminVehiclesIdIndexRouteImport } from './routes/admin.vehicles.$id.index'
@@ -44,6 +50,36 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminUsersRoute = AdminUsersRouteImport.update({
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminTransfersRoute = AdminTransfersRouteImport.update({
+  id: '/transfers',
+  path: '/transfers',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminReportsRoute = AdminReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminOwnersRoute = AdminOwnersRouteImport.update({
+  id: '/owners',
+  path: '/owners',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminIncidentsRoute = AdminIncidentsRouteImport.update({
+  id: '/incidents',
+  path: '/incidents',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAuditRoute = AdminAuditRouteImport.update({
+  id: '/audit',
+  path: '/audit',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminVehiclesIndexRoute = AdminVehiclesIndexRouteImport.update({
   id: '/vehicles/',
   path: '/vehicles/',
@@ -70,6 +106,12 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRouteWithChildren
   '/auth': typeof AuthRoute
   '/search': typeof SearchRoute
+  '/admin/audit': typeof AdminAuditRoute
+  '/admin/incidents': typeof AdminIncidentsRoute
+  '/admin/owners': typeof AdminOwnersRoute
+  '/admin/reports': typeof AdminReportsRoute
+  '/admin/transfers': typeof AdminTransfersRoute
+  '/admin/users': typeof AdminUsersRoute
   '/admin/': typeof AdminIndexRoute
   '/admin/vehicles/new': typeof AdminVehiclesNewRoute
   '/admin/vehicles/': typeof AdminVehiclesIndexRoute
@@ -80,6 +122,12 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/search': typeof SearchRoute
+  '/admin/audit': typeof AdminAuditRoute
+  '/admin/incidents': typeof AdminIncidentsRoute
+  '/admin/owners': typeof AdminOwnersRoute
+  '/admin/reports': typeof AdminReportsRoute
+  '/admin/transfers': typeof AdminTransfersRoute
+  '/admin/users': typeof AdminUsersRoute
   '/admin': typeof AdminIndexRoute
   '/admin/vehicles/new': typeof AdminVehiclesNewRoute
   '/admin/vehicles': typeof AdminVehiclesIndexRoute
@@ -92,6 +140,12 @@ export interface FileRoutesById {
   '/admin': typeof AdminRouteWithChildren
   '/auth': typeof AuthRoute
   '/search': typeof SearchRoute
+  '/admin/audit': typeof AdminAuditRoute
+  '/admin/incidents': typeof AdminIncidentsRoute
+  '/admin/owners': typeof AdminOwnersRoute
+  '/admin/reports': typeof AdminReportsRoute
+  '/admin/transfers': typeof AdminTransfersRoute
+  '/admin/users': typeof AdminUsersRoute
   '/admin/': typeof AdminIndexRoute
   '/admin/vehicles/new': typeof AdminVehiclesNewRoute
   '/admin/vehicles/': typeof AdminVehiclesIndexRoute
@@ -105,6 +159,12 @@ export interface FileRouteTypes {
     | '/admin'
     | '/auth'
     | '/search'
+    | '/admin/audit'
+    | '/admin/incidents'
+    | '/admin/owners'
+    | '/admin/reports'
+    | '/admin/transfers'
+    | '/admin/users'
     | '/admin/'
     | '/admin/vehicles/new'
     | '/admin/vehicles/'
@@ -115,6 +175,12 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/search'
+    | '/admin/audit'
+    | '/admin/incidents'
+    | '/admin/owners'
+    | '/admin/reports'
+    | '/admin/transfers'
+    | '/admin/users'
     | '/admin'
     | '/admin/vehicles/new'
     | '/admin/vehicles'
@@ -126,6 +192,12 @@ export interface FileRouteTypes {
     | '/admin'
     | '/auth'
     | '/search'
+    | '/admin/audit'
+    | '/admin/incidents'
+    | '/admin/owners'
+    | '/admin/reports'
+    | '/admin/transfers'
+    | '/admin/users'
     | '/admin/'
     | '/admin/vehicles/new'
     | '/admin/vehicles/'
@@ -177,6 +249,48 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/users': {
+      id: '/admin/users'
+      path: '/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AdminUsersRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/transfers': {
+      id: '/admin/transfers'
+      path: '/transfers'
+      fullPath: '/admin/transfers'
+      preLoaderRoute: typeof AdminTransfersRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/reports': {
+      id: '/admin/reports'
+      path: '/reports'
+      fullPath: '/admin/reports'
+      preLoaderRoute: typeof AdminReportsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/owners': {
+      id: '/admin/owners'
+      path: '/owners'
+      fullPath: '/admin/owners'
+      preLoaderRoute: typeof AdminOwnersRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/incidents': {
+      id: '/admin/incidents'
+      path: '/incidents'
+      fullPath: '/admin/incidents'
+      preLoaderRoute: typeof AdminIncidentsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/audit': {
+      id: '/admin/audit'
+      path: '/audit'
+      fullPath: '/admin/audit'
+      preLoaderRoute: typeof AdminAuditRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/vehicles/': {
       id: '/admin/vehicles/'
       path: '/vehicles'
@@ -209,6 +323,12 @@ declare module '@tanstack/react-router' {
 }
 
 interface AdminRouteChildren {
+  AdminAuditRoute: typeof AdminAuditRoute
+  AdminIncidentsRoute: typeof AdminIncidentsRoute
+  AdminOwnersRoute: typeof AdminOwnersRoute
+  AdminReportsRoute: typeof AdminReportsRoute
+  AdminTransfersRoute: typeof AdminTransfersRoute
+  AdminUsersRoute: typeof AdminUsersRoute
   AdminIndexRoute: typeof AdminIndexRoute
   AdminVehiclesNewRoute: typeof AdminVehiclesNewRoute
   AdminVehiclesIndexRoute: typeof AdminVehiclesIndexRoute
@@ -217,6 +337,12 @@ interface AdminRouteChildren {
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminAuditRoute: AdminAuditRoute,
+  AdminIncidentsRoute: AdminIncidentsRoute,
+  AdminOwnersRoute: AdminOwnersRoute,
+  AdminReportsRoute: AdminReportsRoute,
+  AdminTransfersRoute: AdminTransfersRoute,
+  AdminUsersRoute: AdminUsersRoute,
   AdminIndexRoute: AdminIndexRoute,
   AdminVehiclesNewRoute: AdminVehiclesNewRoute,
   AdminVehiclesIndexRoute: AdminVehiclesIndexRoute,
