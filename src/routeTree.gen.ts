@@ -15,6 +15,9 @@ import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as AdminVehiclesIndexRouteImport } from './routes/admin.vehicles.index'
+import { Route as AdminVehiclesNewRouteImport } from './routes/admin.vehicles.new'
+import { Route as AdminVehiclesIdIndexRouteImport } from './routes/admin.vehicles.$id.index'
+import { Route as AdminVehiclesIdTransferRouteImport } from './routes/admin.vehicles.$id.transfer'
 
 const SearchRoute = SearchRouteImport.update({
   id: '/search',
@@ -46,6 +49,21 @@ const AdminVehiclesIndexRoute = AdminVehiclesIndexRouteImport.update({
   path: '/vehicles/',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminVehiclesNewRoute = AdminVehiclesNewRouteImport.update({
+  id: '/vehicles/new',
+  path: '/vehicles/new',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminVehiclesIdIndexRoute = AdminVehiclesIdIndexRouteImport.update({
+  id: '/vehicles/$id/',
+  path: '/vehicles/$id/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminVehiclesIdTransferRoute = AdminVehiclesIdTransferRouteImport.update({
+  id: '/vehicles/$id/transfer',
+  path: '/vehicles/$id/transfer',
+  getParentRoute: () => AdminRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -53,14 +71,20 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/search': typeof SearchRoute
   '/admin/': typeof AdminIndexRoute
+  '/admin/vehicles/new': typeof AdminVehiclesNewRoute
   '/admin/vehicles/': typeof AdminVehiclesIndexRoute
+  '/admin/vehicles/$id/transfer': typeof AdminVehiclesIdTransferRoute
+  '/admin/vehicles/$id/': typeof AdminVehiclesIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/search': typeof SearchRoute
   '/admin': typeof AdminIndexRoute
+  '/admin/vehicles/new': typeof AdminVehiclesNewRoute
   '/admin/vehicles': typeof AdminVehiclesIndexRoute
+  '/admin/vehicles/$id/transfer': typeof AdminVehiclesIdTransferRoute
+  '/admin/vehicles/$id': typeof AdminVehiclesIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -69,7 +93,10 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/search': typeof SearchRoute
   '/admin/': typeof AdminIndexRoute
+  '/admin/vehicles/new': typeof AdminVehiclesNewRoute
   '/admin/vehicles/': typeof AdminVehiclesIndexRoute
+  '/admin/vehicles/$id/transfer': typeof AdminVehiclesIdTransferRoute
+  '/admin/vehicles/$id/': typeof AdminVehiclesIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -79,9 +106,20 @@ export interface FileRouteTypes {
     | '/auth'
     | '/search'
     | '/admin/'
+    | '/admin/vehicles/new'
     | '/admin/vehicles/'
+    | '/admin/vehicles/$id/transfer'
+    | '/admin/vehicles/$id/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/search' | '/admin' | '/admin/vehicles'
+  to:
+    | '/'
+    | '/auth'
+    | '/search'
+    | '/admin'
+    | '/admin/vehicles/new'
+    | '/admin/vehicles'
+    | '/admin/vehicles/$id/transfer'
+    | '/admin/vehicles/$id'
   id:
     | '__root__'
     | '/'
@@ -89,7 +127,10 @@ export interface FileRouteTypes {
     | '/auth'
     | '/search'
     | '/admin/'
+    | '/admin/vehicles/new'
     | '/admin/vehicles/'
+    | '/admin/vehicles/$id/transfer'
+    | '/admin/vehicles/$id/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -143,17 +184,44 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminVehiclesIndexRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/vehicles/new': {
+      id: '/admin/vehicles/new'
+      path: '/vehicles/new'
+      fullPath: '/admin/vehicles/new'
+      preLoaderRoute: typeof AdminVehiclesNewRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/vehicles/$id/': {
+      id: '/admin/vehicles/$id/'
+      path: '/vehicles/$id'
+      fullPath: '/admin/vehicles/$id/'
+      preLoaderRoute: typeof AdminVehiclesIdIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/vehicles/$id/transfer': {
+      id: '/admin/vehicles/$id/transfer'
+      path: '/vehicles/$id/transfer'
+      fullPath: '/admin/vehicles/$id/transfer'
+      preLoaderRoute: typeof AdminVehiclesIdTransferRouteImport
+      parentRoute: typeof AdminRoute
+    }
   }
 }
 
 interface AdminRouteChildren {
   AdminIndexRoute: typeof AdminIndexRoute
+  AdminVehiclesNewRoute: typeof AdminVehiclesNewRoute
   AdminVehiclesIndexRoute: typeof AdminVehiclesIndexRoute
+  AdminVehiclesIdTransferRoute: typeof AdminVehiclesIdTransferRoute
+  AdminVehiclesIdIndexRoute: typeof AdminVehiclesIdIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminIndexRoute: AdminIndexRoute,
+  AdminVehiclesNewRoute: AdminVehiclesNewRoute,
   AdminVehiclesIndexRoute: AdminVehiclesIndexRoute,
+  AdminVehiclesIdTransferRoute: AdminVehiclesIdTransferRoute,
+  AdminVehiclesIdIndexRoute: AdminVehiclesIdIndexRoute,
 }
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
