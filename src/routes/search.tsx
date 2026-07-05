@@ -107,9 +107,7 @@ function VehicleCard({ v }: { v: any }) {
           <SectionLabel>Current owner</SectionLabel>
           <dl className="mt-2 space-y-2 text-sm">
             <Row k="Name" val={v.owner?.full_name ?? "—"}/>
-            <Row k="Phone" val={v.owner?.phone ?? "—"}/>
             <Row k="District" val={v.owner?.district ?? "—"}/>
-            <Row k="Address" val={v.owner?.address ?? "—"}/>
           </dl>
         </div>
         <div>
