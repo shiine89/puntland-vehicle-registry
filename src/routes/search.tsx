@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { useServerFn } from "@tanstack/react-start";
+import { publicSearchVehicles, type PublicVehicle } from "@/lib/public-search.functions";
 import { Search, ArrowLeft, ShieldCheck, ShieldAlert, Clock } from "lucide-react";
 
 export const Route = createFileRoute("/search")({
@@ -13,37 +14,23 @@ export const Route = createFileRoute("/search")({
   }),
 });
 
-type VehicleRow = any;
-
 function SearchPage() {
+  const search = useServerFn(publicSearchVehicles);
   const [q, setQ] = useState("");
   const [loading, setLoading] = useState(false);
-  const [results, setResults] = useState<VehicleRow[] | null>(null);
+  const [results, setResults] = useState<PublicVehicle[] | null>(null);
 
   async function onSearch(e: React.FormEvent) {
     e.preventDefault();
     if (!q.trim()) return;
     setLoading(true);
-    const term = q.trim().toUpperCase();
-    // Try plate/chassis first
-    const { data: byV } = await supabase
-      .from("vehicles")
-      .select("*, owner:owners!vehicles_current_owner_id_fkey(*), incidents(*), history:ownership_history(*, owner:owners(*))")
-      .or(`plate_number.ilike.%${term}%,chassis_number.ilike.%${term}%,vin.ilike.%${term}%`)
-      .limit(10);
-    let combined: any[] = byV ?? [];
-    if (combined.length === 0) {
-      const { data: owners } = await supabase.from("owners").select("id").ilike("full_name", `%${q.trim()}%`).limit(20);
-      const ids = (owners ?? []).map((o) => o.id);
-      if (ids.length) {
-        const { data: byO } = await supabase
-          .from("vehicles")
-          .select("*, owner:owners!vehicles_current_owner_id_fkey(*), incidents(*), history:ownership_history(*, owner:owners(*))")
-          .in("current_owner_id", ids);
-        combined = byO ?? [];
-      }
+    try {
+      const data = await search({ data: { q: q.trim() } });
+      setResults(data);
+    } catch (err) {
+      console.error(err);
+      setResults([]);
     }
-    setResults(combined);
     setLoading(false);
   }
 
