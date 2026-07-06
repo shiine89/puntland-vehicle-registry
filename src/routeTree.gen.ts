@@ -16,6 +16,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as AdminUsersRouteImport } from './routes/admin.users'
 import { Route as AdminTransfersRouteImport } from './routes/admin.transfers'
+import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
 import { Route as AdminReportsRouteImport } from './routes/admin.reports'
 import { Route as AdminOwnersRouteImport } from './routes/admin.owners'
 import { Route as AdminIncidentsRouteImport } from './routes/admin.incidents'
@@ -58,6 +59,11 @@ const AdminUsersRoute = AdminUsersRouteImport.update({
 const AdminTransfersRoute = AdminTransfersRouteImport.update({
   id: '/transfers',
   path: '/transfers',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminSettingsRoute = AdminSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminReportsRoute = AdminReportsRouteImport.update({
@@ -110,6 +116,7 @@ export interface FileRoutesByFullPath {
   '/admin/incidents': typeof AdminIncidentsRoute
   '/admin/owners': typeof AdminOwnersRoute
   '/admin/reports': typeof AdminReportsRoute
+  '/admin/settings': typeof AdminSettingsRoute
   '/admin/transfers': typeof AdminTransfersRoute
   '/admin/users': typeof AdminUsersRoute
   '/admin/': typeof AdminIndexRoute
@@ -126,6 +133,7 @@ export interface FileRoutesByTo {
   '/admin/incidents': typeof AdminIncidentsRoute
   '/admin/owners': typeof AdminOwnersRoute
   '/admin/reports': typeof AdminReportsRoute
+  '/admin/settings': typeof AdminSettingsRoute
   '/admin/transfers': typeof AdminTransfersRoute
   '/admin/users': typeof AdminUsersRoute
   '/admin': typeof AdminIndexRoute
@@ -144,6 +152,7 @@ export interface FileRoutesById {
   '/admin/incidents': typeof AdminIncidentsRoute
   '/admin/owners': typeof AdminOwnersRoute
   '/admin/reports': typeof AdminReportsRoute
+  '/admin/settings': typeof AdminSettingsRoute
   '/admin/transfers': typeof AdminTransfersRoute
   '/admin/users': typeof AdminUsersRoute
   '/admin/': typeof AdminIndexRoute
@@ -163,6 +172,7 @@ export interface FileRouteTypes {
     | '/admin/incidents'
     | '/admin/owners'
     | '/admin/reports'
+    | '/admin/settings'
     | '/admin/transfers'
     | '/admin/users'
     | '/admin/'
@@ -179,6 +189,7 @@ export interface FileRouteTypes {
     | '/admin/incidents'
     | '/admin/owners'
     | '/admin/reports'
+    | '/admin/settings'
     | '/admin/transfers'
     | '/admin/users'
     | '/admin'
@@ -196,6 +207,7 @@ export interface FileRouteTypes {
     | '/admin/incidents'
     | '/admin/owners'
     | '/admin/reports'
+    | '/admin/settings'
     | '/admin/transfers'
     | '/admin/users'
     | '/admin/'
@@ -263,6 +275,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminTransfersRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/settings': {
+      id: '/admin/settings'
+      path: '/settings'
+      fullPath: '/admin/settings'
+      preLoaderRoute: typeof AdminSettingsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/reports': {
       id: '/admin/reports'
       path: '/reports'
@@ -327,6 +346,7 @@ interface AdminRouteChildren {
   AdminIncidentsRoute: typeof AdminIncidentsRoute
   AdminOwnersRoute: typeof AdminOwnersRoute
   AdminReportsRoute: typeof AdminReportsRoute
+  AdminSettingsRoute: typeof AdminSettingsRoute
   AdminTransfersRoute: typeof AdminTransfersRoute
   AdminUsersRoute: typeof AdminUsersRoute
   AdminIndexRoute: typeof AdminIndexRoute
@@ -341,6 +361,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminIncidentsRoute: AdminIncidentsRoute,
   AdminOwnersRoute: AdminOwnersRoute,
   AdminReportsRoute: AdminReportsRoute,
+  AdminSettingsRoute: AdminSettingsRoute,
   AdminTransfersRoute: AdminTransfersRoute,
   AdminUsersRoute: AdminUsersRoute,
   AdminIndexRoute: AdminIndexRoute,
