@@ -16,6 +16,7 @@ const nav = [
   { to: "/admin/reports", label: "Reports", icon: FileText },
   { to: "/admin/audit", label: "Audit Log", icon: ShieldCheck, adminOnly: true },
   { to: "/admin/users", label: "Users", icon: UserCog, adminOnly: true },
+  { to: "/admin/settings", label: "Settings", icon: Settings },
 ];
 
 function AdminLayout() {

@@ -22,52 +22,71 @@ export type PublicVehicle = {
 };
 
 const VEHICLE_COLS =
-  "id,plate_number,vehicle_type,manufacturer,model,year,color,chassis_number,engine_number,registration_date,status,blacklisted,stolen,wanted,recovered,current_owner_id";
+  "id,plate_number,vehicle_type,manufacturer,model,year,color,chassis_number,engine_number,vin,registration_date,status,blacklisted,stolen,wanted,recovered,current_owner_id";
+
+// Escape PostgREST reserved chars in ilike patterns
+function esc(s: string) {
+  return s.replace(/[,()%*]/g, " ").trim();
+}
 
 export const publicSearchVehicles = createServerFn({ method: "POST" })
   .inputValidator((input: { q: string }) => ({ q: String(input?.q ?? "").trim() }))
   .handler(async ({ data }): Promise<PublicVehicle[]> => {
-    const q = data.q;
+    const raw = data.q;
+    if (!raw) return [];
+    const q = esc(raw);
     if (!q) return [];
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const term = q.toUpperCase();
 
-    // 1) Try plate / chassis / VIN
-    let { data: vehicles } = await supabaseAdmin
+    const pat = `%${q}%`;
+    // Broad fuzzy search across vehicle fields (ilike is case-insensitive)
+    const orFilter = [
+      `plate_number.ilike.${pat}`,
+      `chassis_number.ilike.${pat}`,
+      `vin.ilike.${pat}`,
+      `engine_number.ilike.${pat}`,
+      `manufacturer.ilike.${pat}`,
+      `model.ilike.${pat}`,
+      `color.ilike.${pat}`,
+      `vehicle_type.ilike.${pat}`,
+    ].join(",");
+
+    const collected = new Map<string, any>();
+
+    const { data: byField } = await supabaseAdmin
       .from("vehicles")
       .select(VEHICLE_COLS)
-      .or(`plate_number.ilike.%${term}%,chassis_number.ilike.%${term}%,vin.ilike.%${term}%`)
-      .limit(10);
+      .or(orFilter)
+      .limit(25);
+    (byField ?? []).forEach((v: any) => collected.set(v.id, v));
 
-    // 2) Fallback: search by owner name
-    if (!vehicles || vehicles.length === 0) {
-      const { data: owners } = await supabaseAdmin
-        .from("owners")
-        .select("id")
-        .ilike("full_name", `%${q}%`)
-        .limit(20);
-      const ids = (owners ?? []).map((o) => o.id);
-      if (ids.length) {
-        const { data: byO } = await supabaseAdmin
-          .from("vehicles")
-          .select(VEHICLE_COLS)
-          .in("current_owner_id", ids);
-        vehicles = byO ?? [];
-      } else {
-        vehicles = [];
-      }
+    // Also search by owner name / phone / national id
+    const { data: owners } = await supabaseAdmin
+      .from("owners")
+      .select("id")
+      .or(`full_name.ilike.${pat},phone.ilike.${pat},national_id.ilike.${pat}`)
+      .limit(50);
+    const ownerIds = (owners ?? []).map((o: any) => o.id);
+    if (ownerIds.length) {
+      const { data: byO } = await supabaseAdmin
+        .from("vehicles")
+        .select(VEHICLE_COLS)
+        .in("current_owner_id", ownerIds)
+        .limit(25);
+      (byO ?? []).forEach((v: any) => collected.set(v.id, v));
     }
 
-    if (!vehicles || vehicles.length === 0) return [];
+    const vehicles = Array.from(collected.values());
+    if (vehicles.length === 0) return [];
 
     const vehicleIds = vehicles.map((v: any) => v.id);
-    const ownerIds = Array.from(
+    const currentOwnerIds = Array.from(
       new Set(vehicles.map((v: any) => v.current_owner_id).filter(Boolean)),
     ) as string[];
 
-    const [{ data: owners }, { data: incidents }, { data: history }] = await Promise.all([
-      ownerIds.length
-        ? supabaseAdmin.from("owners").select("id,full_name,district").in("id", ownerIds)
+    const [ownersRes, incidentsRes, historyRes] = await Promise.all([
+      currentOwnerIds.length
+        ? supabaseAdmin.from("owners").select("id,full_name,district").in("id", currentOwnerIds)
         : Promise.resolve({ data: [] as any[] }),
       supabaseAdmin
         .from("incidents")
@@ -79,16 +98,18 @@ export const publicSearchVehicles = createServerFn({ method: "POST" })
         .in("vehicle_id", vehicleIds)
         .order("transfer_date", { ascending: false }),
     ]);
+    const ownersData = ownersRes.data ?? [];
+    const incidents = incidentsRes.data ?? [];
+    const history = historyRes.data ?? [];
 
-    // Fetch owner names referenced by history
     const historyOwnerIds = Array.from(
-      new Set((history ?? []).map((h: any) => h.owner_id).filter(Boolean)),
+      new Set(history.map((h: any) => h.owner_id).filter(Boolean)),
     ) as string[];
     const { data: histOwners } = historyOwnerIds.length
       ? await supabaseAdmin.from("owners").select("id,full_name").in("id", historyOwnerIds)
       : { data: [] as any[] };
 
-    const ownerMap = new Map((owners ?? []).map((o: any) => [o.id, o]));
+    const ownerMap = new Map((ownersData ?? []).map((o: any) => [o.id, o]));
     const histOwnerMap = new Map((histOwners ?? []).map((o: any) => [o.id, o]));
 
     return vehicles.map((v: any) => ({
@@ -113,7 +134,7 @@ export const publicSearchVehicles = createServerFn({ method: "POST" })
             district: ownerMap.get(v.current_owner_id)?.district ?? null,
           }
         : null,
-      incidents: (incidents ?? [])
+      incidents: incidents
         .filter((i: any) => i.vehicle_id === v.id)
         .map((i: any) => ({
           id: i.id,
@@ -122,7 +143,7 @@ export const publicSearchVehicles = createServerFn({ method: "POST" })
           description: i.description,
           reported_date: i.reported_date,
         })),
-      history: (history ?? [])
+      history: history
         .filter((h: any) => h.vehicle_id === v.id)
         .map((h: any) => ({
           id: h.id,
