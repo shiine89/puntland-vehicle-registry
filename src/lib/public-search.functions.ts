@@ -26,13 +26,6 @@ export type PublicStats = {
   flagged: number;
 };
 
-function serverClient() {
-  // Lazy import to keep client bundle safe
-  const { createClient } = require("@supabase/supabase-js");
-  return createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_PUBLISHABLE_KEY!, {
-    auth: { persistSession: false, autoRefreshToken: false, storage: undefined },
-  });
-}
 
 export const publicSearchVehicles = createServerFn({ method: "POST" })
   .inputValidator((input: { q: string }) => ({ q: String(input?.q ?? "").trim() }))
