@@ -433,6 +433,36 @@ export type Database = {
         }
         Returns: boolean
       }
+      public_registry_stats: {
+        Args: never
+        Returns: {
+          flagged: number
+          owners: number
+          transfers: number
+          vehicles: number
+        }[]
+      }
+      public_search_vehicles: {
+        Args: { q: string }
+        Returns: {
+          blacklisted: boolean
+          chassis_number: string
+          color: string
+          engine_number: string
+          id: string
+          manufacturer: string
+          model: string
+          plate_number: string
+          recovered: boolean
+          registration_date: string
+          status: string
+          stolen: boolean
+          vehicle_type: string
+          vin: string
+          wanted: boolean
+          year: number
+        }[]
+      }
     }
     Enums: {
       app_role: "admin" | "officer" | "viewer"
