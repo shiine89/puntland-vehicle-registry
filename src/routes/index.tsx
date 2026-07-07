@@ -1,29 +1,20 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
+import { useServerFn } from "@tanstack/react-start";
+import { publicRegistryStats } from "@/lib/public-search.functions";
 import { Search, ShieldCheck, ArrowRightLeft, AlertTriangle, FileCheck2, Lock, ArrowRight, Car } from "lucide-react";
 
 export const Route = createFileRoute("/")({ component: Landing });
 
 function useStats() {
+  const fetchStats = useServerFn(publicRegistryStats);
   return useQuery({
     queryKey: ["landing-stats"],
-    queryFn: async () => {
-      const [vehicles, owners, transfers, flagged] = await Promise.all([
-        supabase.from("vehicles").select("*", { count: "exact", head: true }),
-        supabase.from("owners").select("*", { count: "exact", head: true }),
-        supabase.from("ownership_history").select("*", { count: "exact", head: true }),
-        supabase.from("vehicles").select("*", { count: "exact", head: true }).or("blacklisted.eq.true,stolen.eq.true,wanted.eq.true"),
-      ]);
-      return {
-        vehicles: vehicles.count ?? 0,
-        owners: owners.count ?? 0,
-        transfers: transfers.count ?? 0,
-        flagged: flagged.count ?? 0,
-      };
-    },
+    queryFn: () => fetchStats(),
+    refetchInterval: 15000,
   });
 }
+
 
 function Landing() {
   const { data: stats } = useStats();
@@ -40,7 +31,7 @@ function Landing() {
             </div>
           </Link>
           <nav className="flex items-center gap-2">
-            <Link to="/search" className="px-3 py-2 text-sm font-medium text-foreground/80 hover:text-foreground">Verify</Link>
+            <Link to="/search" className="px-3 py-2 text-sm font-medium text-foreground/80 hover:text-foreground">Search</Link>
             <Link to="/auth" className="px-4 py-2 rounded-md bg-primary text-primary-foreground text-sm font-medium hover:opacity-90">Admin Login</Link>
           </nav>
         </div>

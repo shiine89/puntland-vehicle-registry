@@ -19,56 +19,53 @@ export type PublicVehicle = {
   recovered: boolean | null;
 };
 
-const VEHICLE_COLS =
-  "id,plate_number,vehicle_type,manufacturer,model,year,color,chassis_number,engine_number,vin,registration_date,status,blacklisted,stolen,wanted,recovered";
+export type PublicStats = {
+  vehicles: number;
+  owners: number;
+  transfers: number;
+  flagged: number;
+};
 
-function esc(s: string) {
-  return s.replace(/[,()%*]/g, " ").trim();
+function serverClient() {
+  // Lazy import to keep client bundle safe
+  const { createClient } = require("@supabase/supabase-js");
+  return createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_PUBLISHABLE_KEY!, {
+    auth: { persistSession: false, autoRefreshToken: false, storage: undefined },
+  });
 }
 
 export const publicSearchVehicles = createServerFn({ method: "POST" })
   .inputValidator((input: { q: string }) => ({ q: String(input?.q ?? "").trim() }))
   .handler(async ({ data }): Promise<PublicVehicle[]> => {
-    const raw = data.q;
-    if (!raw) return [];
-    const q = esc(raw);
-    if (!q) return [];
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    if (!data.q) return [];
+    const { createClient } = await import("@supabase/supabase-js");
+    const client = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_PUBLISHABLE_KEY!, {
+      auth: { persistSession: false, autoRefreshToken: false, storage: undefined },
+    });
+    const { data: rows, error } = await client.rpc("public_search_vehicles", { q: data.q });
+    if (error) {
+      console.error("[publicSearchVehicles] rpc error", error);
+      return [];
+    }
+    return (rows ?? []) as PublicVehicle[];
+  });
 
-    const pat = `%${q}%`;
-    const orFilter = [
-      `plate_number.ilike.${pat}`,
-      `chassis_number.ilike.${pat}`,
-      `vin.ilike.${pat}`,
-      `engine_number.ilike.${pat}`,
-      `manufacturer.ilike.${pat}`,
-      `model.ilike.${pat}`,
-      `color.ilike.${pat}`,
-      `vehicle_type.ilike.${pat}`,
-    ].join(",");
-
-    const { data: rows } = await supabaseAdmin
-      .from("vehicles")
-      .select(VEHICLE_COLS)
-      .or(orFilter)
-      .limit(25);
-
-    return (rows ?? []).map((v: any) => ({
-      id: v.id,
-      plate_number: v.plate_number,
-      vehicle_type: v.vehicle_type,
-      manufacturer: v.manufacturer,
-      model: v.model,
-      year: v.year,
-      color: v.color,
-      chassis_number: v.chassis_number,
-      engine_number: v.engine_number,
-      vin: v.vin,
-      registration_date: v.registration_date,
-      status: v.status,
-      blacklisted: v.blacklisted,
-      stolen: v.stolen,
-      wanted: v.wanted,
-      recovered: v.recovered,
-    }));
+export const publicRegistryStats = createServerFn({ method: "GET" })
+  .handler(async (): Promise<PublicStats> => {
+    const { createClient } = await import("@supabase/supabase-js");
+    const client = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_PUBLISHABLE_KEY!, {
+      auth: { persistSession: false, autoRefreshToken: false, storage: undefined },
+    });
+    const { data, error } = await client.rpc("public_registry_stats");
+    if (error || !data || !data[0]) {
+      if (error) console.error("[publicRegistryStats] rpc error", error);
+      return { vehicles: 0, owners: 0, transfers: 0, flagged: 0 };
+    }
+    const r = data[0] as { vehicles: number; owners: number; transfers: number; flagged: number };
+    return {
+      vehicles: Number(r.vehicles) || 0,
+      owners: Number(r.owners) || 0,
+      transfers: Number(r.transfers) || 0,
+      flagged: Number(r.flagged) || 0,
+    };
   });
