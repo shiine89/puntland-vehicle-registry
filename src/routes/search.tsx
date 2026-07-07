@@ -8,9 +8,9 @@ export const Route = createFileRoute("/search")({
   component: SearchPage,
   head: () => ({
     meta: [
-      { title: "Verify a Vehicle — Puntland Vehicle Registry" },
+      { title: "Search a Vehicle — Puntland Vehicle Registry" },
       { name: "description", content: "Instantly verify whether a vehicle is officially registered in the Puntland Vehicle Registration System. Search by plate number, chassis / VIN, or engine number." },
-      { property: "og:title", content: "Verify a Vehicle — Puntland Vehicle Registry" },
+      { property: "og:title", content: "Search a Vehicle — Puntland Vehicle Registry" },
       { property: "og:description", content: "Public vehicle verification portal for citizens, buyers, and law enforcement." },
     ],
   }),
@@ -59,7 +59,7 @@ function SearchPage() {
           <div className="inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-3 py-1 text-xs font-mono text-muted-foreground">
             <ShieldCheck className="h-3.5 w-3.5 text-primary"/> Official Government Verification
           </div>
-          <h1 className="mt-4 text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight">Verify a Vehicle</h1>
+          <h1 className="mt-4 text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight">Search a Vehicle</h1>
           <p className="mt-3 text-sm sm:text-base text-muted-foreground max-w-xl mx-auto">
             Instantly check if a vehicle is officially registered in the Puntland Vehicle Registration System.
           </p>
@@ -80,7 +80,7 @@ function SearchPage() {
               disabled={loading}
               className="h-12 px-6 rounded-lg bg-primary text-primary-foreground font-medium disabled:opacity-60 inline-flex items-center justify-center gap-2 hover:opacity-90 transition"
             >
-              {loading ? (<><Loader2 className="h-4 w-4 animate-spin"/> Verifying…</>) : (<>Verify</>)}
+              {loading ? (<><Loader2 className="h-4 w-4 animate-spin"/> Searching…</>) : (<>Search</>)}
             </button>
           </form>
           {error && <p className="mt-3 text-sm text-destructive">{error}</p>}
