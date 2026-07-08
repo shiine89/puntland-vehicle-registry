@@ -85,7 +85,7 @@ function SearchPage() {
           </form>
           {error && <p className="mt-3 text-sm text-destructive">{error}</p>}
           <p className="mt-4 text-[11px] font-mono text-muted-foreground">
-            🔒 Owner information is protected. Only registration data is shown.
+            Search by plate, chassis, VIN, engine, owner name or phone.
           </p>
         </div>
       </div>
@@ -190,12 +190,14 @@ function VehicleCard({ v }: { v: PublicVehicle }) {
         <Row k="Color" val={v.color ?? "—"}/>
         <Row k="Chassis / VIN" val={<span className="font-mono">{v.vin || v.chassis_number}</span>}/>
         <Row k="Engine No." val={<span className="font-mono">{v.engine_number ?? "—"}</span>}/>
+        <Row k="Owner Name" val={v.owner_name ?? "—"}/>
+        <Row k="Owner Phone" val={<span className="font-mono">{v.owner_phone ?? "—"}</span>}/>
         <Row k="Authority" val="Puntland Vehicle Registry"/>
       </div>
 
       <div className="px-6 py-3 bg-muted/30 border-t border-border text-[11px] font-mono text-muted-foreground flex items-center gap-2">
         <BadgeCheck className="h-3.5 w-3.5 text-primary"/>
-        Owner details are protected and not disclosed publicly.
+        Verified record from the official Puntland Vehicle Registry.
       </div>
     </div>
   );

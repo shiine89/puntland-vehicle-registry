@@ -17,6 +17,8 @@ export type PublicVehicle = {
   stolen: boolean | null;
   wanted: boolean | null;
   recovered: boolean | null;
+  owner_name: string | null;
+  owner_phone: string | null;
 };
 
 export type PublicStats = {

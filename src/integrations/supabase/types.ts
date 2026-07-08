@@ -452,6 +452,8 @@ export type Database = {
           id: string
           manufacturer: string
           model: string
+          owner_name: string
+          owner_phone: string
           plate_number: string
           recovered: boolean
           registration_date: string
