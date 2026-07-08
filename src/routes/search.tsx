@@ -199,11 +199,6 @@ function VehicleCard({ v }: { v: PublicVehicle }) {
         <BadgeCheck className="h-3.5 w-3.5 text-primary"/>
         Verified record from the official Puntland Vehicle Registry.
       </div>
-
-      <div className="px-6 py-3 bg-muted/30 border-t border-border text-[11px] font-mono text-muted-foreground flex items-center gap-2">
-        <BadgeCheck className="h-3.5 w-3.5 text-primary"/>
-        Owner details are protected and not disclosed publicly.
-      </div>
     </div>
   );
 }
