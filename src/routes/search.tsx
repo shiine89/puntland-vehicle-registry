@@ -85,7 +85,7 @@ function SearchPage() {
           </form>
           {error && <p className="mt-3 text-sm text-destructive">{error}</p>}
           <p className="mt-4 text-[11px] font-mono text-muted-foreground">
-            🔒 Owner information is protected. Only registration data is shown.
+            Search by plate, chassis, VIN, engine, owner name or phone.
           </p>
         </div>
       </div>
