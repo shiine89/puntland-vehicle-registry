@@ -36,7 +36,7 @@ function ErrorComponent({ error, reset }: import("@tanstack/react-router").Error
     <div className="flex min-h-screen items-center justify-center hero-mesh px-4">
       <div className="glass max-w-md rounded-2xl p-10 text-center">
         <h1 className="text-2xl font-semibold">Something went wrong</h1>
-        <p className="mt-2 text-sm text-muted-foreground">{error.message}</p>
+        <p className="mt-2 text-sm text-muted-foreground">{error instanceof Error ? error.message : String(error)}</p>
         <button onClick={() => { router.invalidate(); reset(); }} className="mt-6 rounded-md bg-primary px-5 py-2.5 text-sm text-primary-foreground">
           Try again
         </button>
